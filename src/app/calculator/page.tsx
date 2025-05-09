@@ -32,9 +32,16 @@ interface Action {
 
 const paragrafyPath = path.join(process.cwd(), 'zakony/vypoctovy_paragrafy.json');
 const vypoctyPath = path.join(process.cwd(), 'zakony/vypoctovy_zaklad.json');
+const dphPath = path.join(process.cwd(), 'zakony/dph.json');
 
 const paragrafy: Record<string, ParagrafData> = JSON.parse(fs.readFileSync(paragrafyPath, 'utf-8'));
 const vypocty: YearData[] = JSON.parse(fs.readFileSync(vypoctyPath, 'utf-8'));
+const dphRaw: Record<string, string> = JSON.parse(fs.readFileSync(dphPath, 'utf-8'));
+
+const dphRates: Record<number, number> = {};
+for (const [year, percent] of Object.entries(dphRaw)) {
+  dphRates[Number(year)] = parseFloat(percent.replace('%', '')) / 100;
+}
 
 const actions: Action[] = Object.entries(paragrafy).flatMap(([paragraf, data]) => {
   return data.actions.map((action) => ({
@@ -62,7 +69,7 @@ export default function CalculatorPage() {
             Prehľad sadzieb podľa Vyhlášky č. 655/2004 Z. z.
           </p>
         </div>
-        <CalculatorClient actions={actions} allYears={allYears} vypocty={vypocty} />
+        <CalculatorClient actions={actions} allYears={allYears} vypocty={vypocty} dphRates={dphRates} />
         <div className="mt-8 text-center">
           <Link
             href="/"

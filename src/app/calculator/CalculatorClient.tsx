@@ -1,6 +1,8 @@
 "use client";
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface Action {
   paragraf: string;
@@ -146,6 +148,103 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
   const sumDPHGrouped = Object.values(dphGroups).reduce((acc, g) => acc + g.sum * g.dph, 0);
   const sumWithDPHGrouped = sumWithoutDPHGrouped + sumDPHGrouped;
 
+  function handleExportPDF() {
+    const doc = new jsPDF({ orientation: 'landscape' });
+    // Hlavička s paragrafom
+    doc.setFont('times', 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(30, 64, 175);
+    doc.text('§', 14, 20);
+    doc.setFontSize(22);
+    doc.text('Kalkulačka právnych úkonov', 28, 20);
+    doc.setFontSize(12);
+    doc.setFont('times', 'normal');
+    doc.setTextColor(0, 0, 0);
+    doc.text('Prehľad sadzieb podľa Vyhlášky č. 655/2004 Z. z.', 14, 30);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Dátum exportu: ${new Date().toLocaleDateString('sk-SK')}`, 285, 20, { align: 'right' });
+
+    // Modrá čiara pod hlavičkou
+    doc.setDrawColor(30, 64, 175);
+    doc.setLineWidth(1.2);
+    doc.line(14, 34, 285, 34);
+
+    // Tabuľka úkonov
+    const tableRows: string[][] = calcItems
+      .map((item) => {
+        const sadzba = getSadzba(item.action, item.paragraf, item.year);
+        if (sadzba === null) return undefined;
+        const dphValue = dphRates[item.year] ?? 0.2;
+        return [
+          String(item.action),
+          String(item.year),
+          String(item.qty),
+          `${sadzba} EUR`,
+          `${(dphValue * 100).toFixed(0)}%`,
+          `${(sadzba * item.qty * (1 + dphValue)).toLocaleString('sk-SK', { maximumFractionDigits: 2 })} EUR`,
+        ];
+      })
+      .filter((row): row is string[] => !!row);
+
+    autoTable(doc, {
+      head: [[
+        'Úkon', 'Rok', 'Množstvo', 'Sadzba', 'DPH', 'Suma s DPH'
+      ]],
+      body: tableRows,
+      startY: 40,
+      styles: { font: 'helvetica', fontSize: 13, cellPadding: 4, valign: 'middle' },
+      headStyles: { fillColor: [30, 64, 175], textColor: 255, fontStyle: 'bold', font: 'helvetica', fontSize: 14 },
+      alternateRowStyles: { fillColor: [240, 245, 255] },
+      tableLineColor: [30, 64, 175],
+      tableLineWidth: 0.4,
+      margin: { left: 14, right: 14 },
+      didDrawPage: (data) => {
+        doc.setDrawColor(30, 64, 175);
+        doc.setLineWidth(1.2);
+        const tableWidth = typeof ((data.table as unknown) as { width?: number }).width === 'number' ? ((data.table as unknown) as { width: number }).width : 257;
+        const cursorY = data.cursor && typeof data.cursor.y === 'number' ? data.cursor.y : (data.settings.startY + 40);
+        doc.rect(data.settings.margin.left - 2, data.settings.startY - 2, tableWidth + 4, cursorY - data.settings.startY + 4);
+      },
+    });
+
+    // Výsledok sekcia
+    let y = 60;
+    if (typeof ((doc as unknown) as { lastAutoTable?: { finalY?: number } }).lastAutoTable?.finalY === 'number') {
+      y = ((doc as unknown) as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 16;
+    }
+    doc.setDrawColor(30, 64, 175);
+    doc.setLineWidth(0.8);
+    doc.line(14, y - 8, 285, y - 8);
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(30, 64, 175);
+    doc.text('Výsledok', 14, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(13);
+    doc.setTextColor(0, 0, 0);
+    y += 10;
+    doc.text(`Súčet bez DPH: ${sumWithoutDPHGrouped.toLocaleString('sk-SK', { maximumFractionDigits: 2 })} EUR`, 14, y);
+    y += 8;
+    for (const [dphLabel, group] of Object.entries(dphGroups)) {
+      doc.text(`DPH (${dphLabel}): ${(group.sum * group.dph).toLocaleString('sk-SK', { maximumFractionDigits: 2 })} EUR`, 14, y);
+      y += 8;
+    }
+    doc.setFont('times', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(30, 64, 175);
+    doc.text(`Celková suma s DPH: ${sumWithDPHGrouped.toLocaleString('sk-SK', { maximumFractionDigits: 2 })} EUR`, 14, y);
+    doc.setTextColor(0, 0, 0);
+
+    // Poznámka do päty
+    y += 18;
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(11);
+    doc.setTextColor(120, 120, 120);
+    doc.text('Vypočítané podľa Vyhlášky č. 655/2004 Z. z. | www.justice.gov.sk', 14, y);
+
+    doc.save('pravna_odmena.pdf');
+  }
+
   return (
     <>
       {/* Tabs */}
@@ -182,6 +281,13 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
               ))}
             </select>
           </div>
+          {yearData?.vypoctovy_zaklad && (
+            <div className="mb-4 text-center">
+              <span className="inline-block bg-blue-50 dark:bg-blue-900 text-blue-900 dark:text-blue-200 font-semibold rounded-lg px-4 py-2 text-lg shadow-sm">
+                Výpočtový základ pre rok {selectedYear} je {yearData.vypoctovy_zaklad} EUR
+              </span>
+            </div>
+          )}
           <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -222,16 +328,19 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
           <p className="mb-6 text-lg text-gray-700 dark:text-gray-300">Pridajte úkony, zvoľte rok a množstvo. Výsledok vrátane DPH sa zobrazí nižšie.</p>
           {firstValid ? (
             <>
-              <div className="overflow-x-auto">
-                <table className="min-w-[900px] max-w-full w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+              <div className="overflow-x-auto w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
+                <table
+                  className="min-w-[700px] w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
+                  aria-label="Tabuľka úkonov na výpočet odmeny"
+                >
                   <thead className="sticky top-0 z-10 bg-blue-50 dark:bg-blue-900">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider rounded-tl-xl">Úkon</th>
-                      <th className="px-4 py-4 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider">Rok</th>
-                      <th className="px-4 py-4 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider">Množstvo</th>
-                      <th className="px-4 py-4 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider">Sadzba</th>
-                      <th className="px-4 py-4 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider">DPH</th>
-                      <th className="px-4 py-4 rounded-tr-xl" />
+                      <th className="px-4 py-3 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider rounded-tl-xl min-w-[160px]">Úkon</th>
+                      <th className="px-2 py-3 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider min-w-[70px]">Rok</th>
+                      <th className="px-2 py-3 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider min-w-[80px]">Množstvo</th>
+                      <th className="px-2 py-3 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider min-w-[90px]">Sadzba</th>
+                      <th className="px-2 py-3 text-left text-sm font-serif font-semibold text-blue-900 dark:text-blue-200 uppercase tracking-wider min-w-[60px]">DPH</th>
+                      <th className="px-2 py-3 rounded-tr-xl min-w-[40px]" />
                     </tr>
                   </thead>
                   <tbody>
@@ -241,11 +350,11 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
                       const dphValue = dphRates[item.year] ?? 0.2;
                       return (
                         <tr key={item.id} className="hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors group border-b border-gray-100 dark:border-gray-700">
-                          <td className="px-6 py-4 text-base text-gray-900 dark:text-white max-w-xs whitespace-normal">
+                          <td className="px-4 py-3 text-base text-gray-900 dark:text-white max-w-xs whitespace-normal break-words">
                             <label htmlFor={`action-${item.id}`} className="sr-only">Úkon</label>
                             <select
                               id={`action-${item.id}`}
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
+                              className="w-full px-2 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
                               value={`${item.action}|${item.paragraf}`}
                               onChange={e => handleChangeItem(item.id, 'action', e.target.value)}
                             >
@@ -256,11 +365,11 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
                               ))}
                             </select>
                           </td>
-                          <td className="px-4 py-4">
+                          <td className="px-2 py-3">
                             <label htmlFor={`year-${item.id}`} className="sr-only">Rok</label>
                             <select
                               id={`year-${item.id}`}
-                              className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
+                              className="px-2 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
                               value={item.year}
                               onChange={e => handleChangeItem(item.id, 'year', Number(e.target.value))}
                             >
@@ -271,30 +380,30 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
                               ))}
                             </select>
                           </td>
-                          <td className="px-4 py-4">
+                          <td className="px-2 py-3">
                             <label htmlFor={`qty-${item.id}`} className="sr-only">Množstvo</label>
                             <input
                               id={`qty-${item.id}`}
                               type="number"
                               min={1}
-                              className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 text-center"
+                              className="w-20 px-2 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 text-center"
                               value={item.qty}
                               onChange={e => handleChangeItem(item.id, 'qty', Math.max(1, Number(e.target.value)))}
                             />
                           </td>
-                          <td className="px-4 py-4 text-base font-semibold text-blue-800 dark:text-blue-300">
+                          <td className="px-2 py-3 text-base font-semibold text-blue-800 dark:text-blue-300 whitespace-nowrap">
                             {sadzba} EUR
                           </td>
-                          <td className="px-4 py-4">
+                          <td className="px-2 py-3 whitespace-nowrap">
                             <input
                               type="text"
                               readOnly
-                              className="w-16 px-2 py-1 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white text-center"
+                              className="w-14 px-2 py-1 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white text-center"
                               value={`${(dphValue * 100).toFixed(0)}%`}
                               tabIndex={-1}
                             />
                           </td>
-                          <td className="px-4 py-4 text-center">
+                          <td className="px-2 py-3 text-center">
                             <button
                               type="button"
                               className="p-2 rounded-full bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
@@ -343,6 +452,15 @@ export default function CalculatorClient({ actions, allYears, vypocty, dphRates 
                 <span>Celková suma s DPH:</span>
                 <span>{sumWithDPHGrouped.toLocaleString('sk-SK', { maximumFractionDigits: 2 })} EUR</span>
               </div>
+            </div>
+            <div className="flex justify-end mt-6">
+              <button
+                type="button"
+                className="px-6 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors font-semibold shadow-md flex items-center gap-2"
+                onClick={handleExportPDF}
+              >
+                Export do PDF
+              </button>
             </div>
           </div>
         </div>

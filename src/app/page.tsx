@@ -7,10 +7,10 @@ export default function Home() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Kalkulačka Odmien za Právne Úkony
+            Vyhláška č. 655/2004 Z. z.
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Presný výpočet odmeny za právne úkony v trestnom práve podľa platnej legislatívy
+            Vyhláška Ministerstva spravodlivosti Slovenskej republiky o odmenách a náhradách advokátov za poskytovanie právnych služieb
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-100 dark:bg-gray-900 py-8 mt-16">
         <div className="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400">
-          <p>© 2024 Právna Kalkulačka. Všetky práva vyhradené.</p>
+          <p>© 2025 Právna Kalkulačka. Všetky práva vyhradené.</p>
         </div>
       </footer>
     </div>

@@ -1,0 +1,120 @@
+{
+  "valid_from": "2024-01-01",
+  "valid_to": null,
+  "categories": [
+    {
+      "name": "Zmluvná odmena",
+      "types": [
+        {
+          "name": "Hodinová odmena",
+          "amount": null,
+          "currency": "EUR",
+          "note": "Dohodou medzi advokátom a klientom."
+        },
+        {
+          "name": "Paušálna odmena",
+          "amount": null,
+          "currency": "EUR",
+          "note": "Dohodou medzi advokátom a klientom."
+        },
+        {
+          "name": "Podielová odmena",
+          "amount": "max 20% z hodnoty veci",
+          "currency": "EUR",
+          "note": "Dohodou, maximálne 20% z hodnoty veci."
+        }
+      ]
+    },
+    {
+      "name": "Tarifná odmena",
+      "subcategories": [
+        {
+          "name": "Občianske konanie a iné úkony právnej služby",
+          "ukony": [
+            {"name": "Prevzatie a príprava zastúpenia vrátane prvej porady s klientom", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny podľa § 10 vyhlášky."},
+            {"name": "Ďalšia porada alebo rokovanie s klientom za každú skončenú hodinu", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Písomné podanie na súd alebo iný orgán alebo protistrane týkajúce sa veci samej", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Predžalobná výzva ako súčasť nároku na náhradu trov konania", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Účasť na konaní pred súdom, vrátane nahliadnutia do súdneho spisu na súde, alebo iným orgánom a na konaní o zmieri, za každé začaté dve hodiny", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny za každé začaté dve hodiny."},
+            {"name": "Vypracovanie právneho rozboru veci", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Rokovanie s protistranou, za každú skončenú hodinu", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Návrh na predbežné opatrenie pred začatím konania", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Odvolanie proti rozhodnutiu o predbežnom opatrení", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Návrh na obnovu konania", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Odvolanie, dovolanie, návrh na podanie mimoriadneho dovolania", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Vypracovanie listiny o právnom úkone alebo jej podstatné prepracovanie", "amount": "podľa tarifnej hodnoty", "currency": "EUR", "note": "Základná sadzba tarifnej odmeny."},
+            {"name": "Návrh na predbežné opatrenie po začatí konania", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Návrh na zabezpečenie dôkazu alebo dedičstva", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Odvolanie alebo sťažnosť proti rozhodnutiu, ak nejde o rozhodnutie vo veci samej, a vyjadrenie k takému odvolaniu", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Výkon rozhodnutia alebo exekúcia: prevzatie a príprava zastúpenia, návrh na začatie konania, vyjadrenie k návrhu, zastupovanie na pojednávaní, odvolanie proti rozhodnutiu a vyjadrenie k odvolaniu", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Ďalšia porada alebo rokovanie s klientom, kratšia ako jedna hodina", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Ďalšia porada alebo rokovanie s protistranou, kratšia ako jedna hodina", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Návrh na opravu odôvodnenia rozhodnutia, na odstránenie následkov zmeškania lehoty a na zmenu rozhodnutia o plnení v splátkach", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."}
+          ]
+        },
+        {
+          "name": "Trestné konanie a konanie o priestupkoch",
+          "ukony": [
+            {"name": "Prevzatie a príprava zastúpenia alebo obhajoby vrátane prvej porady s klientom", "amount": "podľa výpočtového základu", "currency": "EUR", "note": "Základná sadzba podľa § 12 vyhlášky, podľa závažnosti trestného činu."},
+            {"name": "Písomné podanie na súd alebo iný orgán vo veci samej", "amount": "podľa výpočtového základu", "currency": "EUR", "note": "Základná sadzba podľa § 12 vyhlášky."},
+            {"name": "Účasť pri vyšetrovacích úkonoch, pri nahliadnutí do spisu, pri preštudovaní vyšetrovacieho spisu alebo na konaní pred súdom alebo iným orgánom, na konaní o dohode o vine a treste, na konaní o zmieri, za každé začaté dve hodiny", "amount": "podľa výpočtového základu", "currency": "EUR", "note": "Základná sadzba podľa § 12 vyhlášky za každé začaté dve hodiny."},
+            {"name": "Návrh na obnovu konania, odvolanie, dovolanie", "amount": "podľa výpočtového základu", "currency": "EUR", "note": "Základná sadzba podľa § 12 vyhlášky."},
+            {"name": "Vypracovanie listiny o právnom úkone alebo jej podstatné prepracovanie", "amount": "podľa výpočtového základu", "currency": "EUR", "note": "Základná sadzba podľa § 12 vyhlášky."},
+            {"name": "Ďalšia porada alebo rokovanie s klientom za každú skončenú hodinu (aj vo väzbe)", "amount": "dve tretiny základnej sadzby", "currency": "EUR", "note": "Dve tretiny základnej sadzby tarifnej odmeny."},
+            {"name": "Rokovanie s protistranou, za každú skončenú hodinu", "amount": "dve tretiny základnej sadzby", "currency": "EUR", "note": "Dve tretiny základnej sadzby tarifnej odmeny."},
+            {"name": "Návrh na zabezpečenie dôkazu", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Odvolanie proti rozhodnutiu, ak nejde o rozhodnutie vo veci samej, a vyjadrenie k takému odvolaniu", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Návrhy a sťažnosti vo veciach, o ktorých sa rozhoduje na verejnom zasadaní, okrem návrhu na obnovu konania", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Účasť na verejnom zasadaní, ak nejde o odvolanie alebo obnovu konania", "amount": "polovica základnej sadzby", "currency": "EUR", "note": "Polovica základnej sadzby tarifnej odmeny."},
+            {"name": "Ďalšia porada alebo rokovanie s klientom, kratšia ako jedna hodina", "amount": "jedna tretina základnej sadzby", "currency": "EUR", "note": "Jedna tretina základnej sadzby tarifnej odmeny."},
+            {"name": "Ďalšia porada alebo rokovanie s protistranou, kratšia ako jedna hodina", "amount": "jedna tretina základnej sadzby", "currency": "EUR", "note": "Jedna tretina základnej sadzby tarifnej odmeny."},
+            {"name": "Návrh na opravu odôvodnenia rozhodnutia, na odstránenie následkov zmeškania lehoty a na zmenu rozhodnutia o plnení v splátkach", "amount": "jedna štvrtina základnej sadzby", "currency": "EUR", "note": "Jedna štvrtina základnej sadzby tarifnej odmeny."},
+            {"name": "Zastupovanie alebo obhajoba na pojednávaní, pri ktorom sa iba vyhlásilo rozhodnutie, alebo zastupovanie a obhajoba na pojednávaní, ktoré bolo odročené bez prejednania veci", "amount": "jedna štvrtina základnej sadzby", "currency": "EUR", "note": "Jedna štvrtina základnej sadzby tarifnej odmeny."}
+          ]
+        },
+        {
+          "name": "Správne konanie a dávkové veci",
+          "ukony": [
+            {"name": "Zastupovanie v konaniach podľa Správneho súdneho poriadku", "amount": "jedna šestina výpočtového základu", "currency": "EUR", "note": "Jedna šestina výpočtového základu za jeden úkon právnej služby."},
+            {"name": "Dávkové veci sociálneho poistenia", "amount": "jedna trinástina výpočtového základu", "currency": "EUR", "note": "Jedna trinástina výpočtového základu za jeden úkon právnej služby."},
+            {"name": "Veci sociálnych služieb", "amount": "jedna trinástina výpočtového základu", "currency": "EUR", "note": "Jedna trinástina výpočtového základu za jeden úkon právnej služby."}
+          ]
+        },
+        {
+          "name": "Zastupovanie pred Ústavným súdom",
+          "ukony": [
+            {"name": "Zastupovanie pred Ústavným súdom Slovenskej republiky", "amount": "jedna štvrtina výpočtového základu", "currency": "EUR", "note": "Jedna štvrtina výpočtového základu za jeden úkon právnej služby, ak predmet sporu nie je možné oceniť peniazmi."}
+          ]
+        },
+        {
+          "name": "Paušálna odmena za zastupovanie osoby v materiálnej núdzi vyplácaná Centrom právnej pomoci",
+          "ukony": [
+            {"name": "Občianske právo", "amount": 200, "currency": "EUR", "note": "Pevná suma za celé konanie."},
+            {"name": "Rodinné právo", "amount": 130, "currency": "EUR", "note": "Pevná suma za celé konanie."},
+            {"name": "Pracovné právo", "amount": 150, "currency": "EUR", "note": "Pevná suma za celé konanie."},
+            {"name": "Obchodné právo", "amount": 200, "currency": "EUR", "note": "Pevná suma za celé konanie."},
+            {"name": "Obnova konania", "amount": 160, "currency": "EUR", "note": "Pevná suma za celé konanie o povolenie obnovy konania vrátane odvolacieho konania."},
+            {"name": "Mimoriadne dovolanie", "amount": 130, "currency": "EUR", "note": "Pevná suma za celé konanie."},
+            {"name": "Opatrovník v konaní", "amount": 15, "currency": "EUR", "note": "Pevná suma za celé konanie vrátane odvolacieho a dovolacieho konania."},
+            {"name": "Odvolanie alebo dovolanie len vo veciach trov, lehoty, predbežnej vykonateľnosti, príslušenstva pohľadávky alebo procesnej povahy", "amount": 50, "currency": "EUR", "note": "Pevná suma."},
+            {"name": "Mimosúdne vyriešenie veci bez podania návrhu na súd", "amount": 100, "currency": "EUR", "note": "Pevná suma."},
+            {"name": "Zastupovanie viacerých osôb v jednej veci", "amount": "+20%", "currency": "EUR", "note": "Odmena sa zvýši o 20% bez ohľadu na počet osôb."}
+          ]
+        },
+        {
+          "name": "Paušálna odmena za zastupovanie osoby v konaní o oddlžení",
+          "ukony": [
+            {"name": "Zastupovanie osoby v konaní o oddlžení", "amount": 160, "currency": "EUR", "note": "Pevná suma za celé konanie."}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hotové výdavky a náhrada za stratu času",
+      "ukony": [
+        {"name": "Náhrada hotových výdavkov (súdne poplatky, cestovné, telekomunikačné výdavky, znalecké posudky, preklady, odpisy)", "amount": null, "currency": "EUR", "note": "Podľa skutočne vynaložených výdavkov."},
+        {"name": "Náhrada za stratu času (za čas strávený cestou mimo sídla advokáta)", "amount": "jedna šesťdesiatina výpočtového základu za každú aj začatú polhodinu", "currency": "EUR", "note": "Podľa § 17 vyhlášky."}
+      ]
+    }
+  ]
+} 
